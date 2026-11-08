@@ -50,7 +50,10 @@ def feed(log, new, jmptables):
             if lo is None or hi is None:
                 continue
             v = lo | (hi << 8)
-            jmptables.setdefault((bb if bb == 7 or not (0x8000 <= v <= 0xBFFF) else b, v), set()).add(npc)
+            if v < 0x8000: site = 'RAM@$%04X' % v
+            elif v < 0xC000: site = 'bank%d@$%04X' % (b, v)
+            else: site = 'bank7@$%04X' % v
+            jmptables.setdefault(site, set()).add(npc)
             if 0xC000 <= npc <= 0xFFFF:
                 new[7].add(npc)
             elif 0x8000 <= npc <= 0xBFFF:
@@ -91,8 +94,10 @@ def feed_edge(log, new, jmptables):
             elif src >= 0xC000:
                 v = banks[7][src - 0xC000 + 1] | (banks[7][src - 0xC000 + 2] << 8)
             if v is not None:
-                vb = 7 if src >= 0xC000 else b
-                jmptables.setdefault((vb, v), set()).add(dst)
+                if v < 0x8000: site = 'RAM@$%04X' % v
+                elif v < 0xC000: site = 'bank%d@$%04X' % (b, v)
+                else: site = 'bank7@$%04X' % v
+                jmptables.setdefault(site, set()).add(dst)
             if 0xC000 <= dst <= 0xFFFF:
                 new[7].add(dst)
             elif 0x8000 <= dst <= 0xBFFF:
@@ -134,6 +139,6 @@ def main():
             print('bank%d: %d new entries' % (i, len(fresh)))
     print('total new: %d' % total)
     print('jump tables seen: %d sites' % len(jmptables))
-    for (b, v), tgts in sorted(jmptables.items())[:12]:
-        print('  table bank=%d vec=$%04X -> %s' % (b, v, ','.join('$%04X' % t for t in sorted(tgts)[:6])))
+    for site, tgts in sorted(jmptables.items())[:12]:
+        print('  table %s -> %s' % (site, ','.join('$%04X' % t for t in sorted(tgts)[:6])))
 main()
