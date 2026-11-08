@@ -1,3 +1,4 @@
+import os
 import sys
 sys.path.insert(0, '/data/data/com.termux/files/home/storage/AiAgent/def7cmrvqe/disasm/tools')
 import analyze as A
@@ -33,7 +34,8 @@ def feed(log, new, jmptables):
             if 0xC000 <= t <= 0xFFFF:
                 new[7].add(t)
             elif 0x8000 <= t <= 0xBFFF:
-                new[b].add(t)
+                if b == 7: new[7].add(t + 0x4000)
+                else: new[b].add(t)
         elif op == 0x4C:
             lo, _ = op_at(pc+1, b)
             hi, _ = op_at(pc+2, b)
@@ -43,7 +45,8 @@ def feed(log, new, jmptables):
             if 0xC000 <= t <= 0xFFFF:
                 new[7].add(t)
             elif 0x8000 <= t <= 0xBFFF:
-                new[b].add(t)
+                if b == 7: new[7].add(t + 0x4000)
+                else: new[b].add(t)
         elif op == 0x6C:
             lo, _ = op_at(pc+1, b)
             hi, _ = op_at(pc+2, b)
@@ -57,7 +60,8 @@ def feed(log, new, jmptables):
             if 0xC000 <= npc <= 0xFFFF:
                 new[7].add(npc)
             elif 0x8000 <= npc <= 0xBFFF:
-                new[b].add(npc)
+                if b == 7: new[7].add(npc + 0x4000)
+                else: new[b].add(npc)
         elif op == 0x60:
             if stack:
                 want = stack.pop()
@@ -65,7 +69,8 @@ def feed(log, new, jmptables):
                     if 0xC000 <= npc <= 0xFFFF:
                         new[7].add(npc)
                     elif 0x8000 <= npc <= 0xBFFF:
-                        new[npc and b].add(npc)
+                        if b == 7: new[7].add(npc + 0x4000)
+                        else: new[b].add(npc)
 def is_edge(d):
     n = min(len(d) // 8, 200)
     if n == 0:
@@ -86,7 +91,8 @@ def feed_edge(log, new, jmptables):
             if 0xC000 <= dst <= 0xFFFF:
                 new[7].add(dst)
             elif 0x8000 <= dst <= 0xBFFF:
-                new[b].add(dst)
+                if b == 7: new[7].add(dst + 0x4000)
+                else: new[b].add(dst)
         elif ty == 3:
             v = None
             if 0x8000 <= src < 0xC000:
@@ -101,12 +107,14 @@ def feed_edge(log, new, jmptables):
             if 0xC000 <= dst <= 0xFFFF:
                 new[7].add(dst)
             elif 0x8000 <= dst <= 0xBFFF:
-                new[b].add(dst)
+                if b == 7: new[7].add(dst + 0x4000)
+                else: new[b].add(dst)
         elif ty == 4 or ty == 5 or ty == 6 or ty == 7:
             if 0xC000 <= dst <= 0xFFFF:
                 new[7].add(dst)
             elif 0x8000 <= dst <= 0xBFFF:
-                new[b].add(dst)
+                if b == 7: new[7].add(dst + 0x4000)
+                else: new[b].add(dst)
 
 def main():
     new = {i: set() for i in range(8)}
@@ -118,6 +126,22 @@ def main():
         else:
             feed(d, new, jmptables)
     total = 0
+    covered = {}
+    for i in range(8):
+        covered[i] = []
+        try:
+            base = 0xC000 if i == 7 else 0x8000
+            inf = os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', 'info', 'prg%d_auto.info' % i)
+            for line in open(inf):
+                if 'TYPE Code' not in line or 'RANGE' not in line:
+                    continue
+                parts = line.split('$')
+                lo = int(parts[1].split(';')[0], 16)
+                hi = int(parts[2].split(';')[0], 16)
+                if hi >= base:
+                    covered[i].append((max(lo, base), hi))
+        except IOError:
+            pass
     for i in range(8):
         old = set()
         try:
@@ -132,7 +156,8 @@ def main():
                 old |= set(open(W + 'fixed_entries.txt').read().split())
             except IOError:
                 pass
-        fresh = sorted('%04X' % t for t in new[i] if '%04X' % t not in old)
+        cov = covered[i]
+        fresh = sorted('%04X' % t for t in new[i] if '%04X' % t not in old and not any(lo <= t <= hi for lo, hi in cov))
         total += len(fresh)
         if fresh:
             open(W + 'prg%d.bin.tentries' % i, 'w').write(' '.join(fresh))
