@@ -12,6 +12,7 @@ for i in 0 1 2 3 4 5 6; do
   python3 "$D/tools/harvest.py" "$W/prg${i}.bin" 8000 > /dev/null
   E=$(cat "$W/prg${i}.bin.entries")
   if [ "$i" = 0 ]; then E="$E BFE5 BFF1"; fi
+  if [ -f "$W/prg${i}.bin.tentries" ]; then E="$E $(cat "$W/prg${i}.bin.tentries")"; fi
   python3 "$D/tools/analyze.py" "$W/prg${i}.bin" 8000 $E --info "$D/info/prg${i}_auto.info" | head -n 1
   da65 --start-addr '$8000' --info "$D/info/prg${i}_auto.info" "$W/prg${i}.bin" -o "$W/prg${i}_auto.s"
   ca65 --cpu 6502 "$W/prg${i}_auto.s" -o "$W/prg${i}_auto.o"
@@ -40,7 +41,7 @@ echo "== bank 7 =="
 python3 "$D/tools/harvest.py" "$W/prg7.bin" C000 > /dev/null
 (echo EB7E; echo FFF4; echo EB97; tr ' ' '
 ' < "$W/prg7.bin.entries"; echo; tr ' ' '
-' < "$W/fixed_entries.txt") | grep -v '^$' | sort -u | tr '
+' < "$W/fixed_entries.txt"; tr ' ' '\n' < "$W/prg7.bin.tentries" 2>/dev/null; echo) | grep -v '^$' | sort -u | tr '
 ' ' ' > "$W/bank7_entries.txt"
 E=$(cat "$W/bank7_entries.txt")
 python3 "$D/tools/analyze.py" "$W/prg7.bin" C000 $E --info "$D/info/prg7_auto.info" --vword FFFA FFFF | head -n 1
