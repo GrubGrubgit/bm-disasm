@@ -1,15 +1,11 @@
-# Blaster Master (USA) disassembly driver -- scaffold (full bank split + info next step)
-ROM ?= ../work/roms-dev/blaster-master-usa.nes
-BANKDIR ?= ../work/banks
+.RECIPEPREFIX = >
+all: rebuild
 
-split:
-	python3 tools/split_rom.py
+rebuild:
+> sh tools/rebuild.sh
 
-# Smoke test: disassemble the MMC1 fixed bank (prg7 at $C000).
-# Raw sweep only -- proper .info with vectors/labels is the next step.
-disasm-fixed: $(BANKDIR)/prg7.bin
-	da65 --cpu 6502 --start-addr 0xC000 $< -o $(BANKDIR)/fixed.s
-	wc -l $(BANKDIR)/fixed.s
+survey:
+> sh tools/survey.sh
 
 clean:
-	rm -f $(BANKDIR)/fixed.s
+> rm -f ../work/banks/prg*_auto.s ../work/banks/prg*_auto.o ../work/banks/prg*_auto.bin ../work/banks/prg*.entries ../work/banks/fixed_entries.txt ../work/banks/bank7_entries.txt ../work/rebuilt.nes ../work/rebuild.log

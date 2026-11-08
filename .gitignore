@@ -2,6 +2,7 @@
 *.nes
 *.bin
 *.o
+*.s
 *.lst
 build/
 roms/
