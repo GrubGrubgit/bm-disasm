@@ -41,7 +41,7 @@ import sys as _s; print('fixed refs:', len(allc), file=_s.stderr)
 PYEOF
 echo "== bank 7 =="
 python3 "$D/tools/harvest.py" "$W/prg7.bin" C000 > /dev/null
-(echo EB7E; echo FFF4; echo EB97; echo D795; echo D7A9; echo D7BA; tr ' ' '
+(echo EB7E; echo FFF4; echo EB97; echo D795; echo D7A9; echo D7BA; echo C256; echo C2A4; echo C2A7; echo CE1E; echo CE21; echo CE24; echo CE34; echo CE37; echo DEC5; echo DEC8; echo DECB; echo E2C6; echo E307; echo E62A; echo E8B4; echo E8BA; echo E8CD; echo E8D0; echo E958; echo E95B; echo E961; echo E968; echo E96E; echo E978; echo E97F; echo E98A; echo E98D; echo E9AA; echo E9C2; echo E9C6; echo E9C9; echo E9CE; echo EA06; echo EA09; echo EA44; echo EB8A; echo EBA9; echo EBC3; echo EC37; echo EC3A; echo EC3F; echo EC44; echo EC4C; echo EC56; echo EC59; echo EC5E; echo F25D; echo F262; echo F460; echo F556; echo F55B; echo F561; echo F576; echo F592; echo CE42; echo CE45; echo E30E; echo E314; echo E319; echo E3D4; echo E3D7; echo E3E0; echo E4AE; echo E4B1; echo E4C0; echo E4C5; echo E4CA; echo E4CF; echo E4DF; echo E4E6; echo E4E9; echo E521; echo E524; echo E539; echo E53C; echo F586; tr ' ' '
 ' < "$W/prg7.bin.entries"; echo; tr ' ' '
 ' < "$W/fixed_entries.txt"; tr ' ' '\n' < "$W/prg7.bin.tentries" 2>/dev/null; echo) | grep -v '^$' | sort -u | tr '
 ' ' ' > "$W/bank7_entries.txt"
