@@ -10,10 +10,12 @@ python3 "$D/tools/split_rom.py" "$R"
 echo "== banks 0-6 =="
 for i in 0 1 2 3 4 5 6; do
   python3 "$D/tools/harvest.py" "$W/prg${i}.bin" 8000 > /dev/null
-  E=$(cat "$W/prg${i}.bin.entries")
+  EX=""; if [ $i = 0 ]; then EX="--excl 806D-807E"; fi
+  if [ $i = 2 ]; then EX="--excl B2C6-B2CC"; fi
+E=$(cat "$W/prg${i}.bin.entries")
   if [ "$i" = 0 ]; then E="$E BFE5 BFF1"; fi
   if [ -f "$W/prg${i}.bin.tentries" ]; then E="$E $(cat "$W/prg${i}.bin.tentries")"; fi
-  python3 "$D/tools/analyze.py" "$W/prg${i}.bin" 8000 $E --info "$D/info/prg${i}_auto.info" | head -n 1
+  python3 "$D/tools/analyze.py" "$W/prg${i}.bin" 8000 $E $EX --info "$D/info/prg${i}_auto.info" | head -n 1
   da65 --start-addr '$8000' --info "$D/info/prg${i}_auto.info" "$W/prg${i}.bin" -o "$W/prg${i}_auto.s"
   ca65 --cpu 6502 "$W/prg${i}_auto.s" -o "$W/prg${i}_auto.o"
   ld65 -C "$D/cfg/bank8000.cfg" -o "$W/prg${i}_auto.bin" "$W/prg${i}_auto.o"
@@ -39,7 +41,7 @@ import sys as _s; print('fixed refs:', len(allc), file=_s.stderr)
 PYEOF
 echo "== bank 7 =="
 python3 "$D/tools/harvest.py" "$W/prg7.bin" C000 > /dev/null
-(echo EB7E; echo FFF4; echo EB97; tr ' ' '
+(echo EB7E; echo FFF4; echo EB97; echo D795; echo D7A9; echo D7BA; tr ' ' '
 ' < "$W/prg7.bin.entries"; echo; tr ' ' '
 ' < "$W/fixed_entries.txt"; tr ' ' '\n' < "$W/prg7.bin.tentries" 2>/dev/null; echo) | grep -v '^$' | sort -u | tr '
 ' ' ' > "$W/bank7_entries.txt"
