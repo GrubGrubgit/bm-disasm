@@ -1,0 +1,7 @@
+# Device-local ROM copies and build outputs -- never committed
+*.nes
+*.bin
+*.o
+*.lst
+build/
+roms/
