@@ -160,7 +160,11 @@ def main():
         fresh = sorted('%04X' % t for t in new[i] if '%04X' % t not in old and not any(lo <= t <= hi for lo, hi in cov))
         total += len(fresh)
         if fresh:
-            open(W + 'prg%d.bin.tentries' % i, 'w').write(' '.join(fresh))
+            try:
+                keep = set(open(W + 'prg%d.bin.tentries' % i).read().split())
+            except IOError:
+                keep = set()
+            open(W + 'prg%d.bin.tentries' % i, 'w').write(' '.join(sorted(keep | set(fresh))))
             print('bank%d: %d new entries' % (i, len(fresh)))
     print('total new: %d' % total)
     print('jump tables seen: %d sites' % len(jmptables))
