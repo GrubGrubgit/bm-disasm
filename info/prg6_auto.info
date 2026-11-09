@@ -420,6 +420,7 @@ LABEL { NAME "entry_A2BC"; ADDR $A2BC; };
 LABEL { NAME "entry_A2D4"; ADDR $A2D4; };
 LABEL { NAME "entry_A2E9"; ADDR $A2E9; };
 LABEL { NAME "entry_A30A"; ADDR $A30A; };
+LABEL { NAME "entry_A314"; ADDR $A314; };
 LABEL { NAME "entry_A347"; ADDR $A347; };
 LABEL { NAME "entry_A34D"; ADDR $A34D; };
 LABEL { NAME "entry_A350"; ADDR $A350; };
