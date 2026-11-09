@@ -14,7 +14,7 @@ for i in 0 1 2 3 4 5 6; do
   if [ $i = 2 ]; then EX="--excl B2C6-B2CC"; fi
 E=$(cat "$W/prg${i}.bin.entries")
   if [ "$i" = 0 ]; then E="$E BFE5 BFF1"; fi
-  if [ "$i" = 6 ]; then E="$E A314"; fi
+  if [ "$i" = 6 ]; then E="$E A314 9B98 9BDB"; fi
   if [ -f "$W/prg${i}.bin.tentries" ]; then E="$E $(cat "$W/prg${i}.bin.tentries")"; fi
   python3 "$D/tools/analyze.py" "$W/prg${i}.bin" 8000 $E $EX --info "$D/info/prg${i}_auto.info" | head -n 1
   da65 --start-addr '$8000' --info "$D/info/prg${i}_auto.info" "$W/prg${i}.bin" -o "$W/prg${i}_auto.s"
