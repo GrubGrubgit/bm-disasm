@@ -13,7 +13,7 @@ for i in 0 1 2 3 4 5 6; do
   EX=""; if [ $i = 0 ]; then EX="--excl 806D-807E"; fi
   if [ $i = 2 ]; then EX="--excl B2C6-B2CC"; fi
 E=$(cat "$W/prg${i}.bin.entries")
-  if [ "$i" = 0 ]; then E="$E BFE5 BFF1"; fi
+  if [ "$i" = 0 ]; then E="$E BFE5 BFF1 BD99"; fi
   if [ "$i" = 6 ]; then E="$E A314 9B98 9BDB"; fi
   if [ -f "$W/prg${i}.bin.tentries" ]; then E="$E $(cat "$W/prg${i}.bin.tentries")"; fi
   python3 "$D/tools/analyze.py" "$W/prg${i}.bin" 8000 $E $EX --info "$D/info/prg${i}_auto.info" | head -n 1
@@ -28,7 +28,7 @@ import sys
 sys.path.insert(0, '/data/data/com.termux/files/home/storage/AiAgent/def7cmrvqe/disasm/tools')
 import analyze as A
 W = '/data/data/com.termux/files/home/storage/AiAgent/def7cmrvqe/work/banks/'
-extra = {0: ['BFE5', 'BFF1']}
+extra = {0: ['BFE5', 'BFF1', 'BD99']}
 allc = set()
 for i in range(7):
     e = open(W + 'prg%d.bin.entries' % i).read().split() + extra.get(i, [])
