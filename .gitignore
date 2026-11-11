@@ -1,8 +1,9 @@
-# Device-local ROM copies and build outputs -- never committed
+# Device-local ROM copies and binaries -- never committed (*.nes/*.bin/*.o).
+# Actual disassembly lives in asm/prgN.s (tracked); stray root .s still ignored.
 *.nes
 *.bin
 *.o
-*.s
+/*.s
 *.lst
 build/
 roms/
