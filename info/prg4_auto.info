@@ -242,6 +242,7 @@ LABEL { NAME "entry_8F8B"; ADDR $8F8B; };
 LABEL { NAME "entry_8F9F"; ADDR $8F9F; };
 LABEL { NAME "entry_8FA2"; ADDR $8FA2; };
 LABEL { NAME "entry_8FB8"; ADDR $8FB8; };
+LABEL { NAME "entry_8FC0"; ADDR $8FC0; };
 LABEL { NAME "entry_8FC3"; ADDR $8FC3; };
 LABEL { NAME "entry_8FCE"; ADDR $8FCE; };
 LABEL { NAME "entry_8FD1"; ADDR $8FD1; };
