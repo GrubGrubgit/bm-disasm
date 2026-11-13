@@ -15,7 +15,7 @@ for i in 0 1 2 3 4 5 6; do
 E=$(cat "$W/prg${i}.bin.entries")
   if [ "$i" = 0 ]; then E="$E BFE5 BFF1 BD99"; fi
   if [ "$i" = 4 ]; then E="$E 8BE2 9347 938B 9395 8FC0 9FB7 9A8B"; fi
-  if [ "$i" = 6 ]; then E="$E A314 9B98 9BDB A0B9 B118 882A 882D 8850 8853"; fi
+  if [ "$i" = 6 ]; then E="$E A314 9B98 9BDB A0B9 B118 815C 882A 882D 8850 8853"; fi
   if [ -f "$W/prg${i}.bin.tentries" ]; then E="$E $(cat "$W/prg${i}.bin.tentries")"; fi
   python3 "$D/tools/analyze.py" "$W/prg${i}.bin" 8000 $E $EX --info "$D/info/prg${i}_auto.info" | head -n 1
   da65 --start-addr '$8000' --info "$D/info/prg${i}_auto.info" "$W/prg${i}.bin" -o "$W/prg${i}_auto.s"
