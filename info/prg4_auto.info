@@ -323,7 +323,6 @@ LABEL { NAME "entry_9B72"; ADDR $9B72; };
 LABEL { NAME "entry_9B82"; ADDR $9B82; };
 LABEL { NAME "entry_9B8D"; ADDR $9B8D; };
 LABEL { NAME "entry_9B94"; ADDR $9B94; };
-LABEL { NAME "entry_9C3B"; ADDR $9C3B; };
 LABEL { NAME "entry_9C6A"; ADDR $9C6A; };
 LABEL { NAME "entry_9D77"; ADDR $9D77; };
 LABEL { NAME "entry_9DA4"; ADDR $9DA4; };
